@@ -76,6 +76,7 @@
 		  froms = []
 		 }).
 
+-define(SERVER, {global, ?MODULE}).
 %%====================================================================
 %% API
 %%====================================================================
@@ -96,7 +97,7 @@ stop() ->
 %% @doc An entry point for the supervisor. This calls init(Pid) with
 %%      the pid of the supervisor so we can discover the workers.
 start_link() ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, self(), []).
+	gen_server:start_link(?SERVER, ?MODULE, self(), []).
 
 %% @spec eval(Code) -> result()
 %%       Code = list() | binary()
@@ -137,7 +138,7 @@ eval(_, _) ->
 %%      after evaluation. This suggests that any variables you set
 %%      in a reserved PHP persist but that can not be guaranteed.
 eval(Code, Ref, Timeout) ->
-	gen_server:call(?MODULE, {eval, Code, Ref, Timeout}, infinity).
+	gen_server:call(?SERVER, {eval, Code, Ref, Timeout}, infinity).
 
 %% @spec reserve() -> reference()
 %% @doc Equivalent to reserve(undefined).
@@ -154,7 +155,7 @@ reserve() ->
 %%      instance is restarted and the returned Status is break.
 %%      If MaxMem is undefined, it becomes the value in php.app.
 reserve(MaxMem) ->
-	gen_server:call(?MODULE, {reserve, MaxMem, ref}, infinity).
+	gen_server:call(?SERVER, {reserve, MaxMem, ref}, infinity).
 
 %% @spec release(reference()) -> ok
 %% @doc Cancels the reservation of a PHP instance, returning it
@@ -167,13 +168,13 @@ release(Ref) ->
 %%      `'ps -o rss`'. If the instance has died, it is restarted
 %%      before the measurement is taken.
 get_mem(Ref) ->
-	gen_server:call(?MODULE, {get_mem, Ref}, infinity).
+	gen_server:call(?SERVER, {get_mem, Ref}, infinity).
 
 %% @spec restart_all() -> ok
 %% @doc Restarts each PHP thread, waiting if any are reserved. This
 %%      is intended to force an updated PHPLOOP into use.
 restart_all() ->
-	gen_server:call(?MODULE, restart_all, infinity).
+	gen_server:call(?SERVER, restart_all, infinity).
 
 %%====================================================================
 %% gen_server callbacks
@@ -273,7 +274,7 @@ code_change(_OldVsn, State, _Extra) ->
 %%--------------------------------------------------------------------
 
 reserve_php() ->
-	gen_server:call(?MODULE, {reserve, undefined, php}, infinity).
+	gen_server:call(?SERVER, {reserve, undefined, php}, infinity).
 
 maybe_restart(Pid, #state{restart=#restart{froms=Froms,pids=Pids}}=State) ->
 	case lists:member(Pid, Pids) of

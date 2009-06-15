@@ -1,0 +1,7 @@
+A quick (example) adaptor for the php eval server.
+Offers a higher level api as a gen_server, and a thrift server.
+Has one method: whocares(Type, Id) which returns a list of ints.
+
+You will need to compile the erlang thrift libs and edit the path in go.sh
+and include an implementation of whocares() php function or change accordingly.
+

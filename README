@@ -2,15 +2,14 @@ php_app - PHP eval server for Erlang/OTP
 
 Requires Unix/Linux due to dependency on `ps` command to test PHP memory usage.
 
-To compile in erl shell:
-  make:all().
+To compile:
+$ make
 
-To configure, edit php.app.
+To run:
+$ ./run.sh
 
-To start,
-  erl -s php
-or
-  php:start().
+Example usage:
+  php:eval("echo 'Hello, World!';").
+  php:eval("return 1+2;").
+  php:eval("return array(1,'foo',3.14);").
 
-To use,
-  php:eval("echo 'Hello, World!'").
