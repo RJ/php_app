@@ -161,7 +161,7 @@ reserve(MaxMem) ->
 %% @doc Cancels the reservation of a PHP instance, returning it
 %%      to the pool of available instances.
 release(Ref) ->
-	gen_server:cast(?MODULE, {release, Ref}).
+	gen_server:cast(?SERVER, {release, Ref}).
 
 %% @spec get_mem(reference()) -> integer() | {error, term()}
 %% @doc Measures the memory footprint of the PHP instance using
